@@ -1,13 +1,13 @@
 package com.example.ecommercespring;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
 
 @SpringBootTest
-class EcommercespringApplicationTests {
+public class EcommercespringApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
+		// Your test logic here
 	}
-
 }

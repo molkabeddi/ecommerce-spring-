@@ -1,4 +1,4 @@
-package com.example.ecommercespring.entity;
+package com.example.ecommercespring.jwtauth.model;
 
 import com.example.ecommercespring.enums.UserRole;
 import jakarta.persistence.*;
@@ -8,15 +8,17 @@ import jakarta.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+
     private int userId;
-    private String name;
+    private String username;
     private String email;
     private String password;
     private String address;
     private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
     // Getters and Setters
 
     public int getUserId() {
@@ -27,12 +29,12 @@ public class User {
         this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String name) {
+        this.username = name;
     }
 
     public String getEmail() {
