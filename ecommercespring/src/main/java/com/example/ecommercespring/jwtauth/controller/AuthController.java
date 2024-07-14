@@ -1,9 +1,11 @@
 package com.example.ecommercespring.jwtauth.controller;
 
+import com.example.ecommercespring.jwtauth.dto.LoginRequest;
 import com.example.ecommercespring.jwtauth.model.User;
 import com.example.ecommercespring.jwtauth.service.UserService;
 import com.example.ecommercespring.jwtauth.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +30,8 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
     @PostMapping("/register")
-    @PreAuthorize("permitAll()")    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", methods = RequestMethod.POST)
+    @PreAuthorize("permitAll()")
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", methods = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         System.out.println("User: " + user); //
         if (userService.findByUsername(user.getUsername()).isPresent()) {
@@ -38,17 +41,18 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", methods = RequestMethod.POST)
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
+    @PostMapping("/auth/login")
+
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        System.out.println("Login request received: " + loginRequest);
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String jwt = jwtUtils.generateToken(userDetails);
-            return ResponseEntity.ok(jwt);
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            );
+            // Generate JWT or other responses
+            return ResponseEntity.ok("Login successful");
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(401).body("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
 

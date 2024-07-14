@@ -1,5 +1,6 @@
 package com.example.ecommercespring.jwtauth.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,55 +27,58 @@ public class SecurityConfig {
     private static final String ADMIN = "ADMIN";
     private static final String USER = "USER";
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(withDefaults()) // Enable CORS with default settings
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/auth/register", "/auth/login").permitAll() // Allow anonymous access to /auth/register and /auth/login
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
 
-        return http.build();
-    }
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            http
+                    .csrf(csrf -> csrf.disable())
+                    .cors(withDefaults()) // Enable CORS with default settings
+                    .formLogin(withDefaults()) // Enable form login with default settings
+                    .httpBasic(withDefaults()) // Enable HTTP Basic authentication with default settings
+                    .authorizeHttpRequests(authz -> authz
+                            .requestMatchers("/auth/register", "/auth/login").permitAll() // Allow anonymous access to /auth/register and /auth/login
+                            .anyRequest().authenticated()
+                    )
+                    .sessionManagement(session -> session
+                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless session management
+                    );
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+            return http.build();
+        }
 
-    @Bean
-    public UserDetailsService userDetailsService() throws Exception {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User
-                .withUsername("thomas")
-                .password(passwordEncoder().encode("paine"))
-                .roles(ADMIN).build());
-        manager.createUser(User
-                .withUsername("bill")
-                .password(passwordEncoder().encode("withers"))
-                .roles(USER).build());
-        return manager;
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+            return authenticationConfiguration.getAuthenticationManager();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public UserDetailsService userDetailsService() throws Exception {
+            InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+            manager.createUser(User
+                    .withUsername("thomas")
+                    .password(passwordEncoder().encode("paine"))
+                    .roles("ADMIN").build());
+            manager.createUser(User
+                    .withUsername("bill")
+                    .password(passwordEncoder().encode("withers"))
+                    .roles("USER").build());
+            return manager;
+        }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+            return new BCryptPasswordEncoder();
+        }
+
+        @Bean
+        public CorsFilter corsFilter() {
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowCredentials(true);
+            config.addAllowedOrigin("http://localhost:4200");
+            config.addAllowedHeader("*");
+            config.addAllowedMethod("*");
+            source.registerCorsConfiguration("/**", config);
+            return new CorsFilter(source);
+        }
     }
-}
