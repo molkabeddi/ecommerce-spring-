@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,11 +38,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
-
-    // Add a primary role column (optional)
-    @Column(name = "primary_role")
-    @Enumerated(EnumType.STRING)
-    private ERole primaryRole;
 
     public User() {
     }
@@ -92,13 +86,5 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public ERole getPrimaryRole() {
-        return primaryRole;
-    }
-
-    public ERole setPrimaryRole(ERole primaryRole) {
-        return this.primaryRole = primaryRole;
     }
 }
