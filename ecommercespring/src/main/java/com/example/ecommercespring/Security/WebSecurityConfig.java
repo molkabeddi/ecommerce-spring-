@@ -80,6 +80,11 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/api/articles/**").permitAll()
+                        .requestMatchers("/api/cart/**").permitAll()
+
+
+
                         .requestMatchers("/**").permitAll() // Ignoring all other paths
                         .anyRequest().authenticated()
                 );

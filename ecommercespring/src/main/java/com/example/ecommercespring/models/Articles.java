@@ -1,6 +1,5 @@
 package com.example.ecommercespring.models;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -8,30 +7,36 @@ import jakarta.persistence.*;
 public class Articles {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "title")
     private String title;
-
-    @Column(name = "content")
     private String content;
-
-    @Column(name = "published")
     private boolean published;
+    private String category;
+    private double price;
+    private String image;
 
-    public Articles() {
+    // Default constructor
+    public Articles() {}
 
-    }
-
-    public Articles(String title, String content, boolean published) {
+    // Constructor with all fields
+    public Articles(String title, String content, boolean published, String category, double price, String image) {
         this.title = title;
         this.content = content;
         this.published = published;
+        this.category = category;
+        this.price = price;
+        this.image = image;
     }
 
-    public long getId() {
+    // Getters and Setters
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -54,13 +59,31 @@ public class Articles {
         return published;
     }
 
-    public void setPublished(boolean isPublished) {
-        this.published = isPublished;
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
-    @Override
-    public String toString() {
-        return "Article [id=" + id + ", title=" + title + ", content=" + content + ", published=" + published + "]";
+    public String getCategory() {
+        return category;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }
